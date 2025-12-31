@@ -1,0 +1,499 @@
+import React, { useState, useEffect } from "react";
+import { Card, Row, Col, Spin, Alert, Select, Typography } from "antd";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import { apiRequest } from "../../../utils/apiRequest";
+
+const { Title } = Typography;
+const { Option } = Select;
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
+// // Mock API request function (replace with your actual implementation)
+// const apiRequest = async (method: string, url: string, body: any = {}) => {
+//   // This is a mock implementation - replace with your actual API logic
+//   console.log(`${method} ${url}`, body);
+
+//   // Simulate API delay
+//   await new Promise((resolve) => setTimeout(resolve, 500));
+
+//   // Return mock data based on endpoint
+//   const mockData: any = {
+//     "/api/analytics/firs-by-status": {
+//       statusCode: 200,
+//       data: [
+//         {
+//           date: "2025-12-19",
+//           pending: "2",
+//           investigation: "3",
+//           solved: "1",
+//           closed: "0",
+//         },
+//         {
+//           date: "2025-12-20",
+//           pending: "1",
+//           investigation: "4",
+//           solved: "2",
+//           closed: "1",
+//         },
+//         {
+//           date: "2025-12-21",
+//           pending: "3",
+//           investigation: "2",
+//           solved: "3",
+//           closed: "1",
+//         },
+//         {
+//           date: "2025-12-22",
+//           pending: "1",
+//           investigation: "5",
+//           solved: "2",
+//           closed: "2",
+//         },
+//       ],
+//       success: true,
+//     },
+//     "/api/analytics/crime-rate?filter=day": {
+//       statusCode: 200,
+//       data: [
+//         { period: "2025-12-19", total_firs: 6 },
+//         { period: "2025-12-20", total_firs: 8 },
+//         { period: "2025-12-21", total_firs: 9 },
+//         { period: "2025-12-22", total_firs: 10 },
+//       ],
+//       success: true,
+//     },
+//     "/api/analytics/officer-workload": {
+//       statusCode: 200,
+//       data: [
+//         { officer_id: "1", officer_name: "Aslam Chaudhary", assigned_firs: 12 },
+//         { officer_id: "2", officer_name: "Fatima Khan", assigned_firs: 8 },
+//         { officer_id: "3", officer_name: "Ahmed Ali", assigned_firs: 15 },
+//         { officer_id: "4", officer_name: "Sara Malik", assigned_firs: 6 },
+//       ],
+//       success: true,
+//     },
+//     "/api/analytics/officer-solved-firs": {
+//       statusCode: 200,
+//       data: [
+//         { officer_id: "1", officer_name: "Aslam Chaudhary", solved_firs: 8 },
+//         { officer_id: "2", officer_name: "Fatima Khan", solved_firs: 5 },
+//         { officer_id: "3", officer_name: "Ahmed Ali", solved_firs: 10 },
+//         { officer_id: "4", officer_name: "Sara Malik", solved_firs: 4 },
+//       ],
+//       success: true,
+//     },
+//     "/api/analytics/station-firs": {
+//       statusCode: 200,
+//       data: [
+//         {
+//           station_id: "1",
+//           station_name: "Soldier Bazar",
+//           total_firs: 15,
+//           period: "2025-12",
+//         },
+//         {
+//           station_id: "2",
+//           station_name: "Kalakot",
+//           total_firs: 12,
+//           period: "2025-12",
+//         },
+//         {
+//           station_id: "3",
+//           station_name: "Saddar",
+//           total_firs: 18,
+//           period: "2025-12",
+//         },
+//         {
+//           station_id: "4",
+//           station_name: "Clifton",
+//           total_firs: 9,
+//           period: "2025-12",
+//         },
+//       ],
+//       success: true,
+//     },
+//     "/api/analytics/firs-by-crime-type": {
+//       statusCode: 200,
+//       data: [
+//         { type_id: "1", type_name: "Attempt to Murder", total_firs: 8 },
+//         { type_id: "2", type_name: "Assault", total_firs: 12 },
+//         { type_id: "3", type_name: "Theft", total_firs: 15 },
+//         { type_id: "4", type_name: "Robbery", total_firs: 7 },
+//         { type_id: "5", type_name: "Fraud", total_firs: 5 },
+//       ],
+//       success: true,
+//     },
+//     "/api/analytics/firs-by-crime-category": {
+//       statusCode: 200,
+//       data: [
+//         {
+//           category_id: "1",
+//           category_name: "Crimes Against Person",
+//           total_firs: 20,
+//         },
+//         { category_id: "2", category_name: "Property Crimes", total_firs: 22 },
+//         {
+//           category_id: "3",
+//           category_name: "White Collar Crimes",
+//           total_firs: 5,
+//         },
+//       ],
+//       success: true,
+//     },
+//   };
+
+//   return (
+//     mockData[url] ||
+//     mockData[url.split("?")[0]] || { statusCode: 404, success: false }
+//   );
+// };
+
+const COLORS = [
+  "#0088FE",
+  "#00C49F",
+  "#FFBB28",
+  "#FF8042",
+  "#8884D8",
+  "#82CA9D",
+  "#FFC658",
+  "#FF6B9D",
+];
+
+interface DashboardData {
+  firsByStatus: any[];
+  crimeRate: any[];
+  officerWorkload: any[];
+  solvedFirs: any[];
+  stationFirs: any[];
+  crimeTypes: any[];
+  crimeCategories: any[];
+}
+
+const AnalyticsDashboard: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [crimeRateFilter, setCrimeRateFilter] = useState("day");
+  const [data, setData] = useState<DashboardData>({
+    firsByStatus: [],
+    crimeRate: [],
+    officerWorkload: [],
+    solvedFirs: [],
+    stationFirs: [],
+    crimeTypes: [],
+    crimeCategories: [],
+  });
+
+  const fetchAllData = async (filter: string = "day") => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const [
+        firsByStatusRes,
+        crimeRateRes,
+        officerWorkloadRes,
+        solvedFirsRes,
+        stationFirsRes,
+        crimeTypesRes,
+        crimeCategoriesRes,
+      ] = await Promise.all([
+        apiRequest("GET", `${apiUrl}/api/analytics/firs-by-status`),
+        apiRequest("GET", `${apiUrl}/api/analytics/crime-rate?filter=${filter}`),
+        apiRequest("GET", `${apiUrl}/api/analytics/officer-workload`),
+        apiRequest("GET", `${apiUrl}/api/analytics/officer-solved-firs`),
+        apiRequest("GET", `${apiUrl}/api/analytics/station-firs`),
+        apiRequest("GET", `${apiUrl}/api/analytics/firs-by-crime-type`),
+        apiRequest("GET", `${apiUrl}/api/analytics/firs-by-crime-category`),
+      ]);
+
+      console.log(
+        firsByStatusRes,
+        crimeRateRes,
+        officerWorkloadRes,
+        solvedFirsRes,
+        stationFirsRes,
+        crimeTypesRes,
+        crimeCategoriesRes
+      );
+
+      if (!firsByStatusRes.success)
+        throw new Error("Failed to fetch FIR status data");
+
+      setData({
+        firsByStatus: firsByStatusRes.data || [],
+        crimeRate: crimeRateRes.data || [],
+        officerWorkload: officerWorkloadRes.data || [],
+        solvedFirs: solvedFirsRes.data || [],
+        stationFirs: stationFirsRes.data || [],
+        crimeTypes: crimeTypesRes.data || [],
+        crimeCategories: crimeCategoriesRes.data || [],
+      });
+    } catch (err: any) {
+      setError(err.message || "Failed to fetch analytics data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllData(crimeRateFilter);
+  }, []);
+
+  const handleFilterChange = (value: string) => {
+    setCrimeRateFilter(value);
+    fetchAllData(value);
+  };
+
+  // Transform FIR status data for stacked area chart
+  const transformedStatusData = data.firsByStatus.map((item) => ({
+    date: item.date,
+    Pending: parseInt(item.pending) || 0,
+    Investigation: parseInt(item.investigation) || 0,
+    Solved: parseInt(item.solved) || 0,
+    Closed: parseInt(item.closed) || 0,
+  }));
+
+  // Transform crime rate data
+  const transformedCrimeRate = data.crimeRate.map((item) => ({
+    period: item.period,
+    total: item.total_firs,
+  }));
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: "20px" }}>
+        <Alert title="Error" description={error} type="error" showIcon />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "24px", background: "#f0f2f5", minHeight: "100vh" }}>
+      <Title level={2} style={{ marginBottom: "24px" }}>
+        Analytics Dashboard
+      </Title>
+
+      <Row gutter={[16, 16]}>
+        {/* FIR Status Over Time */}
+        <Col xs={24} xl={12}>
+          <Card title="FIR Status Timeline" bordered={false}>
+            <ResponsiveContainer width="100%" height={300}>
+              <LineChart data={transformedStatusData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line
+                  type="monotone"
+                  dataKey="Pending"
+                  stroke="#FF8042"
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="Investigation"
+                  stroke="#FFBB28"
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="Solved"
+                  stroke="#00C49F"
+                  strokeWidth={2}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="Closed"
+                  stroke="#0088FE"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+
+        {/* Crime Rate */}
+        <Col xs={24} xl={12}>
+          <Card
+            title="Crime Rate Trends"
+            bordered={false}
+            extra={
+              <Select
+                value={crimeRateFilter}
+                onChange={handleFilterChange}
+                style={{ width: 120 }}
+              >
+                <Option value="day">Daily</Option>
+                <Option value="week">Weekly</Option>
+                <Option value="month">Monthly</Option>
+                <Option value="year">Yearly</Option>
+              </Select>
+            }
+          >
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={transformedCrimeRate}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="period" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="total" fill="#8884D8" name="Total FIRs" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+
+        {/* Officer Workload */}
+        <Col xs={24} xl={12}>
+          <Card title="Officer Workload" bordered={false}>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data.officerWorkload} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis dataKey="officer_name" type="category" width={120} />
+                <Tooltip />
+                <Legend />
+                <Bar
+                  dataKey="assigned_firs"
+                  fill="#0088FE"
+                  name="Assigned FIRs"
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+
+        {/* Solved FIRs by Officer */}
+        <Col xs={24} xl={12}>
+          <Card title="Solved FIRs by Officer" bordered={false}>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data.solvedFirs} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis type="number" />
+                <YAxis dataKey="officer_name" type="category" width={120} />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="solved_firs" fill="#00C49F" name="Solved FIRs" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+
+        {/* FIRs by Station */}
+        <Col xs={24} xl={12}>
+          <Card title="FIRs by Police Station" bordered={false}>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data.stationFirs}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis
+                  dataKey="station_name"
+                  angle={-45}
+                  textAnchor="end"
+                  height={100}
+                />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="total_firs" fill="#FFBB28" name="Total FIRs" />
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+
+        {/* FIRs by Crime Type */}
+        <Col xs={24} xl={12}>
+          <Card title="FIRs by Crime Type" bordered={false}>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={data.crimeTypes}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ type_name, percent }: any) =>
+                    `${type_name}: ${(percent * 100).toFixed(0)}%`
+                  }
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="total_firs"
+                  nameKey="type_name"
+                >
+                  {data.crimeTypes.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+
+        {/* FIRs by Crime Category */}
+        <Col xs={24} xl={12}>
+          <Card title="FIRs by Crime Category" bordered={false}>
+            <ResponsiveContainer width="100%" height={300}>
+              <PieChart>
+                <Pie
+                  data={data.crimeCategories}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ category_name, percent }: any) =>
+                    `${category_name}: ${(percent * 100).toFixed(0)}%`
+                  }
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="total_firs"
+                  nameKey="category_name"
+                >
+                  {data.crimeCategories.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </Card>
+        </Col>
+      </Row>
+    </div>
+  );
+};
+
+export default AnalyticsDashboard;
