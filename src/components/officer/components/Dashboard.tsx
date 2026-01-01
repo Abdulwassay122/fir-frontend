@@ -105,8 +105,14 @@ const AnalyticsDashboard: React.FC = () => {
         officerWorkload: officerWorkloadRes.data || [],
         solvedFirs: solvedFirsRes.data || [],
         stationFirs: stationFirsRes.data || [],
-        crimeTypes: crimeTypesRes.data || [],
-        crimeCategories: crimeCategoriesRes.data || [],
+        crimeTypes: (crimeTypesRes?.data ?? []).map((item: any) => ({
+          ...item,
+          total_firs: Number(item.total_firs),
+        })),
+        crimeCategories: (crimeCategoriesRes?.data ?? []).map((item: any) => ({
+          ...item,
+          total_firs: Number(item.total_firs),
+        })),
       });
     } catch (err: any) {
       setError(err.message || "Failed to fetch analytics data");
@@ -320,7 +326,7 @@ const AnalyticsDashboard: React.FC = () => {
                   dataKey="total_firs"
                   nameKey="type_name"
                 >
-                  {data.crimeTypes.map((entry, index) => (
+                  {data.crimeTypes.map((_, index) => (
                     <Cell
                       key={`cell-${index}`}
                       fill={COLORS[index % COLORS.length]}

@@ -1,6 +1,6 @@
 // src/components/complainant/ComplainantTable.tsx
 import React, { useState, useEffect, useCallback } from "react";
-import { Table, Input, Spin, Dropdown, Menu, Button, Tooltip } from "antd";
+import { Table, Input, Spin, Dropdown, Button } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import { apiRequest } from "../../../utils/apiRequest";
 import { toast } from "react-toastify";

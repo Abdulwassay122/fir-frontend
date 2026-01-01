@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Form, Input, Button, Select, Card, Spin } from "antd";
+import { Form, Input, Button, Select, Card } from "antd";
 import { apiRequest } from "../../../utils/apiRequest";
 import { toast } from "react-toastify";
 

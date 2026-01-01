@@ -1,7 +1,7 @@
 // src/components/fir/FIRDetail.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, Button, Select, Space, Spin, List } from "antd";
+import { Card, Button, Space, Spin, List, Empty } from "antd";
 import { apiRequest } from "../../../utils/apiRequest";
 import { toast } from "react-toastify";
 import { Typography, Descriptions, Tag, Tooltip } from "antd";
@@ -11,11 +11,9 @@ import {
   ClockCircleOutlined,
   CloseCircleOutlined,
   SyncOutlined,
-  UserOutlined,
+  ReloadOutlined,
 } from "@ant-design/icons";
 import { Timeline } from "antd";
-
-const { Option } = Select;
 
 interface Complainant {
   name: string;
@@ -180,7 +178,30 @@ const FIRDetail: React.FC = () => {
 
   if (loading) return <Spin />;
 
-  if (!fir) return <div>No FIR data available</div>;
+  if (!fir)
+    return (
+      <div
+        style={{
+          minHeight: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Empty
+          description="No FIR data available"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        >
+          <Button
+            type="primary"
+            icon={<ReloadOutlined />}
+            onClick={fetchFIRDetail}
+          >
+            Retry
+          </Button>
+        </Empty>
+      </div>
+    );
 
   return (
     <div className="flex flex-col gap-2">

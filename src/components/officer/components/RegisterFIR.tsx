@@ -1,6 +1,6 @@
 // src/components/RegisterFIR.tsx
 import React, { useEffect, useState, useCallback } from "react";
-import { Form, Input, Select, Button, Spin, Card } from "antd";
+import { Form, Input, Select, Button, Spin } from "antd";
 import { debounce } from "lodash";
 import { toast } from "react-toastify";
 import { apiRequest } from "../../../utils/apiRequest";

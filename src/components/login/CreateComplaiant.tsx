@@ -1,4 +1,3 @@
-import React from "react";
 import CreateComplainant from "../officer/components/AddComplainant";
 import { theme } from "antd";
 

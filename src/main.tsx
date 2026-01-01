@@ -1,4 +1,4 @@
-import { StrictMode, useState, useEffect } from "react";
+import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { ConfigProvider, theme } from "antd";
 import App from "./App";

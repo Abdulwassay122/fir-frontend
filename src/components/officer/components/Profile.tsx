@@ -14,9 +14,7 @@ import {
 import {
   UserOutlined,
   MailOutlined,
-  PhoneOutlined,
   IdcardOutlined,
-  HomeOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 import { apiRequest } from "../../../utils/apiRequest";

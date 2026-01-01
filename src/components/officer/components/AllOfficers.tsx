@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Table, Input, Card, Space, Select, Button, Dropdown } from "antd";
+import { Table, Input, Space, Select, Button, Dropdown } from "antd";
 import { MoreOutlined } from "@ant-design/icons";
 import { debounce } from "lodash";
 import { apiRequest } from "../../../utils/apiRequest";

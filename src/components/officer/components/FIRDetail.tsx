@@ -1,7 +1,16 @@
 // src/components/fir/FIRDetail.tsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Card, Button, Select, Space, Spin, List } from "antd";
+import {
+  Card,
+  Button,
+  Select,
+  Space,
+  Spin,
+  List,
+  Empty,
+  Popconfirm,
+} from "antd";
 import { apiRequest } from "../../../utils/apiRequest";
 import { toast } from "react-toastify";
 import { Typography, Descriptions, Tag, Tooltip } from "antd";
@@ -11,6 +20,8 @@ import {
   ClockCircleOutlined,
   CloseCircleOutlined,
   SyncOutlined,
+  ReloadOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import { Timeline } from "antd";
 import { Modal, Form, Input } from "antd";
@@ -189,6 +200,7 @@ const FIRDetail: React.FC = () => {
     try {
       await apiRequest("DELETE", `${apiUrl}/api/firs/${fir_id}`);
       toast.success("FIR deleted successfully");
+      window.location.href = "/officer/dashboard/all-fir";
     } catch (err: any) {
       toast.error(err.message || "Failed to delete FIR");
     }
@@ -215,8 +227,30 @@ const FIRDetail: React.FC = () => {
 
   if (loading) return <Spin />;
 
-  if (!fir) return <div>No FIR data available</div>;
-
+  if (!fir)
+    return (
+      <div
+        style={{
+          minHeight: "60vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Empty
+          description="No FIR data available"
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+        >
+          <Button
+            type="primary"
+            icon={<ReloadOutlined />}
+            onClick={fetchFIRDetail}
+          >
+            Retry
+          </Button>
+        </Empty>
+      </div>
+    );
   return (
     <div className="flex flex-col gap-2">
       <Card
@@ -251,9 +285,18 @@ const FIRDetail: React.FC = () => {
         </Descriptions>
 
         <Space style={{ marginTop: 16 }}>
-          <Button danger onClick={deleteFIR}>
-            Delete FIR
-          </Button>
+          <Popconfirm
+            title="Delete FIR"
+            description="Are you sure you want to delete this FIR? This action cannot be undone."
+            onConfirm={deleteFIR}
+            okText="Yes, Delete"
+            cancelText="Cancel"
+            okButtonProps={{ danger: true }}
+          >
+            <Button danger icon={<DeleteOutlined />}>
+              Delete FIR
+            </Button>
+          </Popconfirm>
           <Button onClick={updateFIR}>Update FIR</Button>
           <Select
             value={fir.status}

@@ -1,6 +1,6 @@
 // src/components/fir/FIRList.tsx
 import React, { useEffect, useState, useCallback } from "react";
-import { Table, Input, Select, Button, Space, Spin } from "antd";
+import { Table, Input, Select, Button, Space } from "antd";
 import { useNavigate } from "react-router-dom";
 import { debounce } from "lodash";
 import { apiRequest } from "../../../utils/apiRequest";
@@ -129,19 +129,19 @@ const FIRList: React.FC = () => {
     },
     {
       title: "Officer",
-      render: (text: any, record: FIR) => record.Officer?.name || "-",
+      render: (_: any, record: FIR) => record.Officer?.name || "-",
     },
     {
       title: "Station",
-      render: (text: any, record: FIR) => record.PoliceStation?.name || "-",
+      render: (_: any, record: FIR) => record.PoliceStation?.name || "-",
     },
     {
       title: "Type",
-      render: (text: any, record: FIR) => record.CrimeType?.name || "-",
+      render: (_: any, record: FIR) => record.CrimeType?.name || "-",
     },
     {
       title: "Action",
-      render: (text: any, record: FIR) => (
+      render: (_: any, record: FIR) => (
         <Space>
           <Button onClick={() => navigate(`/officer/dashboard/fir-detail/${record.fir_id}`)}>View</Button>
         </Space>

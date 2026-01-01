@@ -1,11 +1,8 @@
 // src/components/fir/FIRList.tsx
-import React, { useEffect, useState, useCallback } from "react";
-import { Table, Input, Select, Button, Space, Spin, Typography } from "antd";
+import React, { useEffect, useState } from "react";
+import { Table, Button, Space, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
-import { debounce } from "lodash";
 import { apiRequest } from "../../../utils/apiRequest";
-
-const { Option } = Select;
 
 interface FIR {
   fir_id: string;
@@ -24,14 +21,13 @@ const FIRList: React.FC = () => {
   const [firs, setFirs] = useState<FIR[]>([]);
   const [loading, setLoading] = useState(false);
 
-
   // Fetch FIRs
   const fetchFIRs = async () => {
     setLoading(true);
     try {
       const data = await apiRequest<{ data: FIR[] }>(
         "get",
-        `${apiUrl}/api/firs/user-firs`,
+        `${apiUrl}/api/firs/user-firs`
       );
       setFirs(data.data);
     } catch (err: any) {
@@ -41,11 +37,9 @@ const FIRList: React.FC = () => {
     }
   };
 
-
-
   useEffect(() => {
     fetchFIRs();
-  }, []); 
+  }, []);
 
   const columns = [
     {
@@ -58,21 +52,27 @@ const FIRList: React.FC = () => {
     },
     {
       title: "Officer",
-      render: (text: any, record: FIR) => record.Officer?.name || "-",
+      render: (_: any, record: FIR) => record.Officer?.name || "-",
     },
     {
       title: "Station",
-      render: (text: any, record: FIR) => record.PoliceStation?.name || "-",
+      render: (_: any, record: FIR) => record.PoliceStation?.name || "-",
     },
     {
       title: "Type",
-      render: (text: any, record: FIR) => record.CrimeType?.name || "-",
+      render: (_: any, record: FIR) => record.CrimeType?.name || "-",
     },
     {
       title: "Action",
-      render: (text: any, record: FIR) => (
+      render: (_: any, record: FIR) => (
         <Space>
-          <Button onClick={() => navigate(`/complainant/dashboard/fir-detail/${record.fir_id}`)}>View</Button>
+          <Button
+            onClick={() =>
+              navigate(`/complainant/dashboard/fir-detail/${record.fir_id}`)
+            }
+          >
+            View
+          </Button>
         </Space>
       ),
     },
