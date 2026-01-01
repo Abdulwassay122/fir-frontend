@@ -297,7 +297,7 @@ const FIRDetail: React.FC = () => {
               Delete FIR
             </Button>
           </Popconfirm>
-          <Button onClick={updateFIR}>Update FIR</Button>
+          {/* <Button onClick={updateFIR}>Update FIR</Button> */}
           <Select
             value={fir.status}
             onChange={toggleStatus}
