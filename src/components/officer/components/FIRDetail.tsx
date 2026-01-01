@@ -206,9 +206,9 @@ const FIRDetail: React.FC = () => {
     }
   };
 
-  const updateFIR = async () => {
-    toast.info("Update FIR functionality not implemented yet");
-  };
+  // const updateFIR = async () => {
+  //   toast.info("Update FIR functionality not implemented yet");
+  // };
 
   const toggleStatus = async (status: string) => {
     try {
