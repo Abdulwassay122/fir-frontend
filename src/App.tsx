@@ -16,8 +16,8 @@ function App({ isDark, toggleTheme  }: AppProps) {
       <BrowserRouter>
         <Routes>
           {/* Public Routes */}
-          <Route path="/officer/login" element={<OfficierLogin />} />
           <Route path="/" element={<ComplainantLogin />} />
+          <Route path="/officer/login" element={<OfficierLogin />} />
           <Route path="/register-complainant" element={<CreateComplaiant />} />
 
           {/* Protected Officer */}
