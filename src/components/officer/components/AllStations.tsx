@@ -47,7 +47,7 @@ const StationList: React.FC = () => {
       debounce((value: string) => {
         fetchStations(value);
       }, 500),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -132,6 +132,7 @@ const StationList: React.FC = () => {
         dataSource={stations}
         loading={loading}
         pagination={{ pageSize: 10 }}
+        scroll={{ x: "max-content" }}
       />
     </>
   );

@@ -41,7 +41,7 @@ const OfficerList: React.FC = () => {
     try {
       const res = await apiRequest<{ data: Station[] }>(
         "GET",
-        `${apiUrl}/api/stations/`
+        `${apiUrl}/api/stations/`,
       );
       setStations(res.data || []);
     } catch {
@@ -72,7 +72,7 @@ const OfficerList: React.FC = () => {
       debounce((value: string) => {
         fetchOfficers(value);
       }, 500),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -179,6 +179,7 @@ const OfficerList: React.FC = () => {
         dataSource={filteredOfficers}
         loading={loading}
         pagination={{ pageSize: 10 }}
+        scroll={{ x: "max-content" }}
       />
     </>
   );

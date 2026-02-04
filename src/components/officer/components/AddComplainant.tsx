@@ -32,7 +32,14 @@ const CreateComplainant: React.FC = () => {
 
   return (
     <div className="flex flex-col justify-center items-center">
-      <Card title="Create Complainant"  style={{ width: 600 }}>
+      <Card
+        title="Create Complainant"
+        style={{
+          width: "100%",
+          maxWidth: 600,
+          margin: "0 auto",
+        }}
+      >
         <Form
           form={form}
           layout="vertical"

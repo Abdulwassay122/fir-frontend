@@ -98,7 +98,6 @@ const App: React.FC<AppProps> = ({ isDark, toggleTheme }) => {
           >
             Abdul Wassay
           </a>
-          , M.Hamza, Manthan
         </Footer>
       </Layout>
     </Layout>

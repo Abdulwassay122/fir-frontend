@@ -66,11 +66,11 @@ const FIRList: React.FC = () => {
         sortField: "date_filed",
         sortOrder: "desc",
       };
-      console.log(payload)
+      console.log(payload);
       const data = await apiRequest<{ data: FIR[] }>(
         "POST",
         `${apiUrl}/api/firs/search`,
-        payload
+        payload,
       );
       setFirs(data.data);
     } catch (err: any) {
@@ -86,19 +86,19 @@ const FIRList: React.FC = () => {
       try {
         const stationsData = await apiRequest<{ data: Station[] }>(
           "GET",
-          `${apiUrl}/api/stations/`
+          `${apiUrl}/api/stations/`,
         );
         setStations(stationsData.data);
 
         const typesData = await apiRequest<{ data: CrimeType[] }>(
           "GET",
-          `${apiUrl}/api/crime/crime-types`
+          `${apiUrl}/api/crime/crime-types`,
         );
         setTypes(typesData.data);
 
         const officersData = await apiRequest<{ data: Officer[] }>(
           "GET",
-          `${apiUrl}/api/officers/search?q=`
+          `${apiUrl}/api/officers/search?q=`,
         );
         setOfficers(officersData.data);
       } catch (err) {
@@ -143,7 +143,13 @@ const FIRList: React.FC = () => {
       title: "Action",
       render: (_: any, record: FIR) => (
         <Space>
-          <Button onClick={() => navigate(`/officer/dashboard/fir-detail/${record.fir_id}`)}>View</Button>
+          <Button
+            onClick={() =>
+              navigate(`/officer/dashboard/fir-detail/${record.fir_id}`)
+            }
+          >
+            View
+          </Button>
         </Space>
       ),
     },
@@ -151,7 +157,7 @@ const FIRList: React.FC = () => {
 
   return (
     <div>
-      <Space style={{ marginBottom: 16 }}>
+      <Space style={{ marginBottom: 16 }} className="flex-wrap">
         <Input.Search
           placeholder="Search FIRs"
           onChange={(e) => debouncedSearch(e.target.value)}
@@ -212,6 +218,7 @@ const FIRList: React.FC = () => {
         columns={columns}
         dataSource={firs}
         loading={loading}
+        scroll={{ x: "max-content" }}
       />
     </div>
   );

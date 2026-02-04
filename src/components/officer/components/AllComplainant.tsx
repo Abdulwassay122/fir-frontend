@@ -28,7 +28,7 @@ const ComplainantTable: React.FC = () => {
       setLoading(true);
       const res = await apiRequest<{ data: Complainant[] }>(
         "GET",
-        `${apiUrl}/api/complainants?q=${query}`
+        `${apiUrl}/api/complainants?q=${query}`,
       );
       setData(res.data || []);
     } catch (err: any) {
@@ -40,7 +40,7 @@ const ComplainantTable: React.FC = () => {
 
   const debouncedFetch = useCallback(
     debounce((val: string) => fetchComplainants(val), 500),
-    []
+    [],
   );
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,7 +141,12 @@ const ComplainantTable: React.FC = () => {
       {loading ? (
         <Spin />
       ) : (
-        <Table dataSource={data} columns={columns} rowKey="complainant_id" />
+        <Table
+          dataSource={data}
+          columns={columns}
+          rowKey="complainant_id"
+          scroll={{ x: "max-content" }}
+        />
       )}
     </div>
   );

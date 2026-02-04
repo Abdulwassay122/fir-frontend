@@ -27,7 +27,7 @@ const FIRList: React.FC = () => {
     try {
       const data = await apiRequest<{ data: FIR[] }>(
         "get",
-        `${apiUrl}/api/firs/user-firs`
+        `${apiUrl}/api/firs/user-firs`,
       );
       setFirs(data.data);
     } catch (err: any) {
@@ -86,6 +86,7 @@ const FIRList: React.FC = () => {
         columns={columns}
         dataSource={firs}
         loading={loading}
+        scroll={{ x: "max-content" }}
       />
     </div>
   );

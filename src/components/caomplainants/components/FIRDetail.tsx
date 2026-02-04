@@ -138,31 +138,31 @@ const FIRDetail: React.FC = () => {
       setLoading(true);
       const firData = await apiRequest<{ data: FIRData }>(
         "GET",
-        `${apiUrl}/api/firs/${fir_id}`
+        `${apiUrl}/api/firs/${fir_id}`,
       );
       setFIR(firData.data);
 
       const evidenceData = await apiRequest<{ data: Evidence[] }>(
         "GET",
-        `${apiUrl}/api/evidence/firs/${fir_id}`
+        `${apiUrl}/api/evidence/firs/${fir_id}`,
       );
       setEvidences(evidenceData.data || []);
 
       const suspectData = await apiRequest<{ data: Suspect[] }>(
         "GET",
-        `${apiUrl}/api/suspects/firs/${fir_id}`
+        `${apiUrl}/api/suspects/firs/${fir_id}`,
       );
       setSuspect(suspectData.data || []);
 
       const arrestData = await apiRequest<{ data: Arrest[] }>(
         "GET",
-        `${apiUrl}/api/arrests/firs/${fir_id}`
+        `${apiUrl}/api/arrests/firs/${fir_id}`,
       );
       setArrest(arrestData.data || []);
 
       const historyData = await apiRequest<{ data: History[] }>(
         "GET",
-        `${apiUrl}/api/history/firs/${fir_id}`
+        `${apiUrl}/api/history/firs/${fir_id}`,
       );
       setHistory(historyData.data || []);
     } catch (err: any) {
@@ -204,10 +204,10 @@ const FIRDetail: React.FC = () => {
     );
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-3 w-full max-w-6xl mx-auto px-2 sm:px-4">
       <Card
         title={
-          <Space>
+          <Space wrap>
             <Text strong>FIR ID:</Text>
             <Text code>{fir.fir_id}</Text>
             <Tooltip title="Copy FIR ID">
@@ -223,7 +223,7 @@ const FIRDetail: React.FC = () => {
         }
         extra={statusTag(fir.status)}
       >
-        <Descriptions bordered column={2}>
+        <Descriptions bordered column={{ xs: 1, sm: 2 }}>
           <Descriptions.Item label="Description" span={2}>
             {fir.description}
           </Descriptions.Item>
@@ -244,24 +244,26 @@ const FIRDetail: React.FC = () => {
             dataSource={evidences}
             renderItem={(e) => (
               <List.Item>
-                <Descriptions size="small" bordered column={2}>
-                  <Descriptions.Item label="Type">
-                    {e.evidence_type}
-                  </Descriptions.Item>
-                  <Descriptions.Item label="File">
-                    <a href={e.file_url} target="_blank">
-                      View
-                    </a>
-                  </Descriptions.Item>
-                  <Descriptions.Item label="Created At">
-                    {new Date(e.createdAt).toLocaleString()}
-                  </Descriptions.Item>
-                  {e.updatedAt !== e.createdAt && (
-                    <Descriptions.Item label="Updated At">
-                      {new Date(e.updatedAt).toLocaleString()}
+                <div style={{ width: "100%", overflowX: "auto" }}>
+                  <Descriptions size="small" bordered column={{ xs: 1, sm: 2 }}>
+                    <Descriptions.Item label="Type">
+                      {e.evidence_type}
                     </Descriptions.Item>
-                  )}
-                </Descriptions>
+                    <Descriptions.Item label="File">
+                      <a href={e.file_url} target="_blank">
+                        View
+                      </a>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Created At">
+                      {new Date(e.createdAt).toLocaleString()}
+                    </Descriptions.Item>
+                    {e.updatedAt !== e.createdAt && (
+                      <Descriptions.Item label="Updated At">
+                        {new Date(e.updatedAt).toLocaleString()}
+                      </Descriptions.Item>
+                    )}
+                  </Descriptions>
+                </div>
               </List.Item>
             )}
           />
@@ -269,7 +271,7 @@ const FIRDetail: React.FC = () => {
       </Card>
 
       <Card title="Complainant Details">
-        <Descriptions bordered>
+        <Descriptions bordered column={{ xs: 1, sm: 2 }}>
           <Descriptions.Item label="Name">
             {fir.Complainant?.name}
           </Descriptions.Item>
@@ -288,7 +290,7 @@ const FIRDetail: React.FC = () => {
         </Descriptions>
       </Card>
       <Card title="Officer Details">
-        <Descriptions bordered>
+        <Descriptions bordered column={{ xs: 1, sm: 2 }}>
           <Descriptions.Item label="Name">
             {fir.Officer?.name}
           </Descriptions.Item>
@@ -312,23 +314,25 @@ const FIRDetail: React.FC = () => {
           dataSource={suspect}
           renderItem={(s) => (
             <List.Item>
-              <Descriptions bordered>
-                <Descriptions.Item label="Name">{s.name}</Descriptions.Item>
-                <Descriptions.Item label="CNIC">{s.cnic}</Descriptions.Item>
-                <Descriptions.Item label="Verified">
-                  {s.isVerified ? (
-                    <Tag color="green">Yes</Tag>
-                  ) : (
-                    <Tag color="red">No</Tag>
-                  )}
-                </Descriptions.Item>
-                <Descriptions.Item label="Description" span={2}>
-                  {s.description}
-                </Descriptions.Item>
-                <Descriptions.Item label="Created At" span={2}>
-                  {new Date(s.createdAt).toLocaleString()}
-                </Descriptions.Item>
-              </Descriptions>
+              <div style={{ width: "100%", overflowX: "auto" }}>
+                <Descriptions bordered column={{ xs: 1, sm: 2 }}>
+                  <Descriptions.Item label="Name">{s.name}</Descriptions.Item>
+                  <Descriptions.Item label="CNIC">{s.cnic}</Descriptions.Item>
+                  <Descriptions.Item label="Verified">
+                    {s.isVerified ? (
+                      <Tag color="green">Yes</Tag>
+                    ) : (
+                      <Tag color="red">No</Tag>
+                    )}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Description" span={2}>
+                    {s.description}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Created At" span={2}>
+                    {new Date(s.createdAt).toLocaleString()}
+                  </Descriptions.Item>
+                </Descriptions>
+              </div>
             </List.Item>
           )}
         />
@@ -339,17 +343,19 @@ const FIRDetail: React.FC = () => {
           dataSource={arrest}
           renderItem={(a) => (
             <List.Item>
-              <Descriptions bordered>
-                <Descriptions.Item label="Description" span={2}>
-                  {a.description}
-                </Descriptions.Item>
-                <Descriptions.Item label="Arrested By">
-                  {a.Officer?.name} ({a.Officer?.badge_no})
-                </Descriptions.Item>
-                <Descriptions.Item label="Suspect">
-                  {a.Suspect?.name} - {a.Suspect?.cnic}
-                </Descriptions.Item>
-              </Descriptions>
+              <div style={{ width: "100%", overflowX: "auto" }}>
+                <Descriptions bordered column={{ xs: 1, sm: 2 }}>
+                  <Descriptions.Item label="Description" span={2}>
+                    {a.description}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Arrested By">
+                    {a.Officer?.name} ({a.Officer?.badge_no})
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Suspect">
+                    {a.Suspect?.name} - {a.Suspect?.cnic}
+                  </Descriptions.Item>
+                </Descriptions>
+              </div>
             </List.Item>
           )}
         />
@@ -365,10 +371,10 @@ const FIRDetail: React.FC = () => {
                 h.status === "solved"
                   ? "green"
                   : h.status === "investigation"
-                  ? "blue"
-                  : h.status === "closed"
-                  ? "red"
-                  : "orange";
+                    ? "blue"
+                    : h.status === "closed"
+                      ? "red"
+                      : "orange";
 
               const statusIcon =
                 h.status === "solved" ? (

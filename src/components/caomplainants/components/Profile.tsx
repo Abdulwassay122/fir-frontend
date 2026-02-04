@@ -82,7 +82,7 @@ const ComplainantProfile: React.FC = () => {
 
   return (
     <div
-      style={{ padding: 24, background: colorBgContainer }}
+      style={{ padding: 0, background: colorBgContainer }}
     >
       <Row justify="center">
         <Col xs={24} md={18} lg={12}>
